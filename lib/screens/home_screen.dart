@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import '../widgets/product_card.dart';
+import '../widgets/promo_banner_carousel.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -38,6 +39,18 @@ class HomeScreen extends StatelessWidget {
               style: TextStyle(color: Colors.grey),
             ),
             const SizedBox(height: 20),
+
+            Column(
+              children: [
+                const SizedBox(height: 20),
+
+                const PromoBannerCarousel(),
+
+                const SizedBox(height: 20),
+
+                // Other home screen sections
+              ],
+            ),
 
             TextField(
               decoration: InputDecoration(
