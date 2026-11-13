@@ -22,23 +22,50 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.only(top: 16,bottom: 16,left: 8,right: 8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Hello, Manish 👋',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+            // const Text(
+            //   'Hello, Manish 👋',
+            //   style: TextStyle(
+            //     fontSize: 24,
+            //     fontWeight: FontWeight.bold,
+            //   ),
+            // ),
+            // const SizedBox(height: 6),
+            // const Text(
+            //   'Discover something you will love.',
+            //   style: TextStyle(color: Colors.grey),
+            // ),
+            // const SizedBox(height: 20),
+
+            Row(
+              children: [
+
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 8.0),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Search products...',
+                        prefixIcon: const Icon(Icons.search),
+                        filled: true,
+                        fillColor: Colors.grey.withOpacity(0.1),
+
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(24),
+                          borderSide: const BorderSide(color: Colors.grey, width: 1.5),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 10,),
+                IconButton(onPressed: (){}, icon: Icon(Icons.tune)),
+                SizedBox(width: 10,),
+              ],
             ),
-            const SizedBox(height: 6),
-            const Text(
-              'Discover something you will love.',
-              style: TextStyle(color: Colors.grey),
-            ),
-            const SizedBox(height: 20),
 
             Column(
               children: [
@@ -52,18 +79,7 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
 
-            TextField(
-              decoration: InputDecoration(
-                hintText: 'Search products...',
-                prefixIcon: const Icon(Icons.search),
-                filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
+
 
             const SizedBox(height: 24),
 
@@ -111,21 +127,21 @@ class HomeScreen extends StatelessWidget {
 
             const SizedBox(height: 14),
 
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: 4,
-              gridDelegate:
-              const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-                childAspectRatio: 0.72,
-              ),
-              itemBuilder: (context, index) {
-                return ProductCard(index: index);
-              },
-            ),
+            // GridView.builder(
+            //   shrinkWrap: true,
+            //   physics: const NeverScrollableScrollPhysics(),
+            //   itemCount: 4,
+            //   gridDelegate:
+            //   const SliverGridDelegateWithFixedCrossAxisCount(
+            //     crossAxisCount: 2,
+            //     crossAxisSpacing: 12,
+            //     mainAxisSpacing: 12,
+            //     childAspectRatio: 0.72,
+            //   ),
+            //   itemBuilder: (context, index) {
+            //     return ProductCard(index: index, product: null,);
+            //   },
+            // ),
           ],
         ),
       ),

@@ -25,7 +25,7 @@ class _PromoBannerCarouselState
       'discount': '50%',
       'subtitle': 'Up to',
       'button': 'Shop Now',
-      'image': 'assets/images/mode1.png',
+      'image': 'assets/images/model1.png',
     },
     {
       'title': 'New Fashion\nCollection',
@@ -115,17 +115,17 @@ class _PromoBannerCarouselState
 
                     // Background circle decoration
                     Positioned(
-                      right: 45,
-                      top: 15,
+                      right: 10,
+                      top: 10,
                       child: Container(
-                        height: 145,
-                        width: 145,
+                        height: 170,
+                        width: 170,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: const Color(0xFF75F54A)
+                            color: const Color(0x3475F54A)
                                 .withOpacity(0.25),
-                            width: 2,
+                            width: 0,
                           ),
                         ),
                       ),
