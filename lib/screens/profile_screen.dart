@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
 
+import 'login_screen.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -15,7 +17,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   static const Color mutedColor = Color(0xFF858A83);
 
   final String name = 'Alex Morgan';
-  final String email = 'alexmorgan@gmail.com';
+  final String email = 'demo@gmail.com';
 
   bool notificationsEnabled = true;
 
@@ -251,10 +253,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.pop(dialogContext);
-                _showMessage(
-                  'Connect authentication to enable logout.',
-                );
+                Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
               },
               child: const Text(
                 'Logout',
