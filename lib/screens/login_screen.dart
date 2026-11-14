@@ -450,7 +450,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               height: 54,
                               child: OutlinedButton(
                                 onPressed: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => SplashScreen()));
+                                  // Navigator.push(context, MaterialPageRoute(builder: (context) => SplashScreen()));
                                   _showMessage(
                                     'Google sign-in integration coming soon!',
                                   );

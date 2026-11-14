@@ -33,7 +33,7 @@ class _TrendingNowSectionState extends State<TrendingNowSection> {
     final products = await _service.fetchProducts();
 
     products.sort(
-          (a, b) => b.rating.compareTo(a.rating),
+          (a, b) => a.rating.compareTo(b.rating),
     );
 
     return products.take(10).toList();
