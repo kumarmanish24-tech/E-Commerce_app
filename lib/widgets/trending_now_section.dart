@@ -1,8 +1,10 @@
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 
 import '../ models/product.dart';
+import '../providers/cart_provider.dart';
 import '../services/product_service.dart';
 
 class TrendingNowSection extends StatefulWidget {
@@ -213,11 +215,11 @@ class _TrendingNowSectionState extends State<TrendingNowSection> {
                   height: 34,
                   child: ElevatedButton(
                     onPressed: () {
+                      context.read<CartProvider>().addToCart(product);
+
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text(
-                            '${product.title} added to cart',
-                          ),
+                          content: Text('${product.title} added to cart'),
                           duration: const Duration(seconds: 1),
                         ),
                       );

@@ -1,8 +1,12 @@
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:provider/provider.dart';
 
 
 import '../ models/product.dart';
+import '../providers/cart_provider.dart';
+import '../providers/cart_provider.dart';
 import '../services/product_service.dart';
 import '../widgets/product_card.dart';
 
@@ -311,14 +315,12 @@ class _ExploreScreenState extends State<ExploreScreen> {
                         return ProductCard(
                           product: product,
                           onAdd: () {
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(
+                            context.read<CartProvider>().addToCart(product);
+
+                            ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
-                                content: Text(
-                                  '${product.title} added to cart',
-                                ),
-                                duration:
-                                const Duration(seconds: 1),
+                                content: Text('${product.title} added to cart'),
+                                duration: const Duration(seconds: 1),
                               ),
                             );
                           },
