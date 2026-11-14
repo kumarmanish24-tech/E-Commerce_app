@@ -1,4 +1,5 @@
 
+import 'package:e_commerce/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -449,6 +450,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               height: 54,
                               child: OutlinedButton(
                                 onPressed: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => SplashScreen()));
                                   _showMessage(
                                     'Google sign-in integration coming soon!',
                                   );

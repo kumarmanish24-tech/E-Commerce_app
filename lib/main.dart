@@ -1,17 +1,17 @@
-
-
-
-import 'package:e_commerce/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'screens/main_screen.dart';
+import 'screens/splash_screen.dart';
 import 'providers/cart_provider.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => CartProvider(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => CartProvider(),
+        ),
+      ],
       child: const MyApp(),
     ),
   );
@@ -24,15 +24,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Shopping App',
+      title: 'Shopify',
       theme: ThemeData(
         useMaterial3: true,
-        colorSchemeSeed: const Color(0xFF315C81),
-        scaffoldBackgroundColor: const Color(0xFFF8F9FB),
-        fontFamily: 'Roboto',
+        colorSchemeSeed: const Color(0xFF75F54A),
       ),
-      // home: const MainScreen(),
-      home: const LoginScreen(),
+      home: const SplashScreen(),
     );
   }
 }
