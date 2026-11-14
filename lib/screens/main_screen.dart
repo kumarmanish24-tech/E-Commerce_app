@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+
 import 'home_screen.dart';
 import 'explore_screen.dart';
 import 'cart_screen.dart';
@@ -15,20 +16,39 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int selectedIndex = 0;
 
-  final List<Widget> pages = const [
-    HomeScreen(),
-    ExploreScreen(),
-    CartScreen(),
-    ProfileScreen(),
-  ];
+  String? _selectedCategorySlug;
+
+  // Open Explore with selected category
+  void _openCategory(String slug) {
+    setState(() {
+      selectedIndex = 1;
+      _selectedCategorySlug = slug.isEmpty ? null : slug;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> pages = [
+      HomeScreen(
+        onCategorySelected: _openCategory,
+      ),
+
+      ExploreScreen(
+        key: ValueKey(_selectedCategorySlug),
+        initialCategorySlug: _selectedCategorySlug,
+      ),
+
+      const CartScreen(),
+
+      const ProfileScreen(),
+    ];
+
     return Scaffold(
       body: IndexedStack(
         index: selectedIndex,
         children: pages,
       ),
+
       bottomNavigationBar: NavigationBar(
         selectedIndex: selectedIndex,
         onDestinationSelected: (index) {
@@ -36,22 +56,26 @@ class _MainScreenState extends State<MainScreen> {
             selectedIndex = index;
           });
         },
+
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.home_outlined),
             selectedIcon: Icon(Icons.home),
             label: 'Home',
           ),
+
           NavigationDestination(
             icon: Icon(Icons.explore_outlined),
             selectedIcon: Icon(Icons.explore),
             label: 'Explore',
           ),
+
           NavigationDestination(
             icon: Icon(Icons.shopping_cart_outlined),
             selectedIcon: Icon(Icons.shopping_cart),
             label: 'Cart',
           ),
+
           NavigationDestination(
             icon: Icon(Icons.person_outline),
             selectedIcon: Icon(Icons.person),

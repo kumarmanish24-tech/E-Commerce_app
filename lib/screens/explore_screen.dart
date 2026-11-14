@@ -7,11 +7,19 @@ import '../services/product_service.dart';
 import '../widgets/product_card.dart';
 
 class ExploreScreen extends StatefulWidget {
-  const ExploreScreen({super.key});
+  final String? initialCategorySlug;
+
+  const ExploreScreen({super.key,this.initialCategorySlug,});
 
   @override
   State<ExploreScreen> createState() => _ExploreScreenState();
 }
+
+
+
+
+
+
 
 class _ExploreScreenState extends State<ExploreScreen> {
   final ProductService _service = ProductService();
@@ -27,13 +35,29 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
   bool isLoadingCategories = true;
 
+  // @override
+  // void initState() {
+  //   super.initState();
+  //
+  //   productsFuture = _service.fetchProducts();
+  //   _loadCategories();
+  // }
+
+
   @override
   void initState() {
     super.initState();
 
-    productsFuture = _service.fetchProducts();
+    selectedCategory = widget.initialCategorySlug ?? 'all';
+
+    productsFuture = selectedCategory == 'all'
+        ? _service.fetchProducts()
+        : _service.fetchProductsByCategory(selectedCategory);
+
     _loadCategories();
   }
+
+
 
   // Load categories from API
   Future<void> _loadCategories() async {

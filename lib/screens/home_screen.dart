@@ -3,13 +3,23 @@ import 'package:flutter/material.dart';
 import '../widgets/product_card.dart';
 import '../widgets/promo_banner_carousel.dart';
 import '../widgets/recommended_products.dart';
+import '../widgets/shop_by_category.dart';
 import '../widgets/trending_now_section.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  final Function(String slug) onCategorySelected;
+
+  const HomeScreen({super.key,
+    required this.onCategorySelected,
+  });
 
   @override
   Widget build(BuildContext context) {
+
+
+
+
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -81,14 +91,22 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
 
-            const SizedBox(height: 25),
+
+
+            ShopByCategory(
+              onCategoryTap: onCategorySelected,
+            ),
+
+
+
+            const SizedBox(height: 12),
 
             const RecommendedProducts(),
 
             const SizedBox(height: 25),
 
             const TrendingNowSection(),
-            const SizedBox(height: 24),
+
 
 
 
