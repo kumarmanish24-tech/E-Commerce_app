@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
+
 import '../widgets/flash_sale_section.dart';
-import '../widgets/product_card.dart';
 import '../widgets/promo_banner_carousel.dart';
 import '../widgets/recommended_products.dart';
 import '../widgets/shop_by_category.dart';
@@ -9,23 +9,23 @@ import '../widgets/trending_now_section.dart';
 
 class HomeScreen extends StatelessWidget {
   final Function(String slug) onCategorySelected;
+  final ValueChanged<String> onSearch;
 
-  const HomeScreen({super.key,
+  const HomeScreen({
+    super.key,
     required this.onCategorySelected,
+    required this.onSearch,
   });
 
   @override
   Widget build(BuildContext context) {
-
-
-
-
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           'ShopEase',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
         ),
         actions: const [
           Padding(
@@ -34,113 +34,96 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
+
       body: SingleChildScrollView(
-        padding: const EdgeInsets.only(top: 16,bottom: 16,left: 2,right: 4),
+        padding: const EdgeInsets.only(
+          top: 16,
+          bottom: 16,
+          left: 2,
+          right: 4,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // const Text(
-            //   'Hello, Manish 👋',
-            //   style: TextStyle(
-            //     fontSize: 24,
-            //     fontWeight: FontWeight.bold,
-            //   ),
-            // ),
-            // const SizedBox(height: 6),
-            // const Text(
-            //   'Discover something you will love.',
-            //   style: TextStyle(color: Colors.grey),
-            // ),
-            // const SizedBox(height: 20),
 
+            // Search Bar
             Row(
               children: [
-
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 8.0),
+                    padding: const EdgeInsets.only(left: 8),
                     child: TextField(
+                      textInputAction: TextInputAction.search,
+
+                      onSubmitted: (value) {
+                        if (value.trim().isNotEmpty) {
+                          onSearch(value.trim());
+                        }
+                      },
+
                       decoration: InputDecoration(
                         hintText: 'Search products...',
                         prefixIcon: const Icon(Icons.search),
+
                         filled: true,
-                        fillColor: Colors.grey.withOpacity(0.1),
+                        fillColor: Colors.white,
 
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(24),
-                          borderSide: const BorderSide(color: Colors.grey, width: 1.5),
+                          borderSide: const BorderSide(
+                            color: Colors.black54,
+                            width: 1.5,
+                          ),
+                        ),
+
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(24),
+                          borderSide: const BorderSide(
+                            color: Color(0xFF237E04),
+                            width: 1.8,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(width: 10,),
-                IconButton(onPressed: (){}, icon: Icon(Icons.tune)),
-                SizedBox(width: 10,),
+
+                const SizedBox(width: 10),
+
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.tune),
+                ),
+
+                const SizedBox(width: 10),
               ],
             ),
 
-            Column(
-              children: [
-                const SizedBox(height: 20),
+            // Promo Banner
+            const SizedBox(height: 20),
 
-                const PromoBannerCarousel(),
+            const PromoBannerCarousel(),
 
-                const SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-                // Other home screen sections
-              ],
-            ),
-
-
-
+            // Shop By Category
             ShopByCategory(
               onCategoryTap: onCategorySelected,
             ),
 
-
-
             const FlashSaleSection(),
-
 
             const SizedBox(height: 24),
 
-
-
-
-
+            // Recommended Products
             const RecommendedProducts(),
 
             const SizedBox(height: 25),
 
+            // Trending Products
             const TrendingNowSection(),
 
-
-
-
-
-
-
-
             const SizedBox(height: 24),
-
-
-
-            // GridView.builder(
-            //   shrinkWrap: true,
-            //   physics: const NeverScrollableScrollPhysics(),
-            //   itemCount: 4,
-            //   gridDelegate:
-            //   const SliverGridDelegateWithFixedCrossAxisCount(
-            //     crossAxisCount: 2,
-            //     crossAxisSpacing: 12,
-            //     mainAxisSpacing: 12,
-            //     childAspectRatio: 0.72,
-            //   ),
-            //   itemBuilder: (context, index) {
-            //     return ProductCard(index: index, product: null,);
-            //   },
-            // ),
           ],
         ),
       ),

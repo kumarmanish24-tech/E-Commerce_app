@@ -17,12 +17,27 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   int selectedIndex = 0;
+
+  String _searchQuery = '';
   String? _selectedCategorySlug;
 
+  // Search from Home Screen
+  void _searchProducts(String query) {
+    if (query.trim().isEmpty) return;
+
+    setState(() {
+      _searchQuery = query.trim();
+      _selectedCategorySlug = null;
+      selectedIndex = 1;
+    });
+  }
+
+  // Category navigation from Home Screen
   void _openCategory(String slug) {
     setState(() {
-      selectedIndex = 1;
       _selectedCategorySlug = slug.isEmpty ? null : slug;
+      _searchQuery = '';
+      selectedIndex = 1;
     });
   }
 
@@ -63,12 +78,19 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final pages = [
-      HomeScreen(onCategorySelected: _openCategory),
-      ExploreScreen(
-        key: ValueKey(_selectedCategorySlug),
-        initialCategorySlug: _selectedCategorySlug,
+      HomeScreen(
+        onCategorySelected: _openCategory,
+        onSearch: _searchProducts,
       ),
+
+      ExploreScreen(
+        key: ValueKey('$_selectedCategorySlug|$_searchQuery'),
+        initialCategorySlug: _selectedCategorySlug,
+        searchQuery: _searchQuery,
+      ),
+
       const CartScreen(),
+
       const ProfileScreen(),
     ];
 
@@ -84,6 +106,12 @@ class _MainScreenState extends State<MainScreen> {
             onDestinationSelected: (index) {
               setState(() {
                 selectedIndex = index;
+
+                // Clear active search when manually opening Explore
+                if (index == 1) {
+                  _searchQuery = '';
+                  _selectedCategorySlug = null;
+                }
               });
             },
             destinations: [

@@ -1,32 +1,7 @@
-//
-// import 'package:flutter/material.dart';
-// import 'screens/main_screen.dart';
-//
-// void main() {
-//   runApp(const MyApp());
-// }
-//
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       debugShowCheckedModeBanner: false,
-//       title: 'Shopping App',
-//       theme: ThemeData(
-//         useMaterial3: true,
-//         colorSchemeSeed: const Color(0xFF315C81),
-//         scaffoldBackgroundColor: const Color(0xFFF8F9FB),
-//         fontFamily: 'Roboto',
-//       ),
-//       home: const MainScreen(),
-//     );
-//   }
-// }
 
 
 
+import 'package:e_commerce/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -56,7 +31,8 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xFFF8F9FB),
         fontFamily: 'Roboto',
       ),
-      home: const MainScreen(),
+      // home: const MainScreen(),
+      home: const LoginScreen(),
     );
   }
 }

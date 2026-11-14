@@ -1,29 +1,25 @@
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
-
 import '../ models/product.dart';
-import '../providers/cart_provider.dart';
 import '../providers/cart_provider.dart';
 import '../services/product_service.dart';
 import '../widgets/product_card.dart';
 
 class ExploreScreen extends StatefulWidget {
   final String? initialCategorySlug;
+  final String searchQuery;
 
-  const ExploreScreen({super.key,this.initialCategorySlug,});
+  const ExploreScreen({
+    super.key,
+    this.initialCategorySlug,
+    this.searchQuery = '',
+  });
 
   @override
   State<ExploreScreen> createState() => _ExploreScreenState();
 }
-
-
-
-
-
-
 
 class _ExploreScreenState extends State<ExploreScreen> {
   final ProductService _service = ProductService();
@@ -34,36 +30,41 @@ class _ExploreScreenState extends State<ExploreScreen> {
   List<Map<String, String>> categories = [];
 
   String selectedCategory = 'all';
+  String _activeSearchQuery = '';
 
   Future<List<Product>>? productsFuture;
 
   bool isLoadingCategories = true;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //
-  //   productsFuture = _service.fetchProducts();
-  //   _loadCategories();
-  // }
-
-
   @override
   void initState() {
     super.initState();
 
-    selectedCategory = widget.initialCategorySlug ?? 'all';
+    _activeSearchQuery = widget.searchQuery.trim();
+    _searchController.text = _activeSearchQuery;
 
-    productsFuture = selectedCategory == 'all'
-        ? _service.fetchProducts()
-        : _service.fetchProductsByCategory(selectedCategory);
+    selectedCategory = _activeSearchQuery.isNotEmpty
+        ? 'all'
+        : widget.initialCategorySlug ?? 'all';
 
+    _loadInitialProducts();
     _loadCategories();
   }
 
+  // Initial products
+  void _loadInitialProducts() {
+    if (_activeSearchQuery.isNotEmpty) {
+      productsFuture =
+          _service.searchProducts(_activeSearchQuery);
+    } else if (selectedCategory == 'all') {
+      productsFuture = _service.fetchProducts();
+    } else {
+      productsFuture =
+          _service.fetchProductsByCategory(selectedCategory);
+    }
+  }
 
-
-  // Load categories from API
+  // Load categories
   Future<void> _loadCategories() async {
     try {
       final result = await _service.fetchCategories();
@@ -85,24 +86,36 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
   // Search products
   void _searchProducts(String query) {
+    final searchText = query.trim();
+
+    FocusScope.of(context).unfocus();
+
     setState(() {
+      _activeSearchQuery = searchText;
       selectedCategory = 'all';
 
-      if (query.trim().isEmpty) {
+      if (searchText.isEmpty) {
         productsFuture = _service.fetchProducts();
       } else {
-        productsFuture = _service.searchProducts(query.trim());
+        productsFuture = _service.searchProducts(searchText);
       }
     });
   }
 
-  // Filter by category
+  // Clear search
+  void _clearSearch() {
+    _searchController.clear();
+    _searchProducts('');
+  }
+
+  // Category selection
   void _selectCategory(String category) {
     FocusScope.of(context).unfocus();
 
     _searchController.clear();
 
     setState(() {
+      _activeSearchQuery = '';
       selectedCategory = category;
 
       if (category == 'all') {
@@ -116,10 +129,17 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
   // Refresh products
   Future<void> _refreshProducts() async {
+    final query = _activeSearchQuery;
+
     setState(() {
-      productsFuture = selectedCategory == 'all'
-          ? _service.fetchProducts()
-          : _service.fetchProductsByCategory(selectedCategory);
+      if (query.isNotEmpty) {
+        productsFuture = _service.searchProducts(query);
+      } else if (selectedCategory == 'all') {
+        productsFuture = _service.fetchProducts();
+      } else {
+        productsFuture =
+            _service.fetchProductsByCategory(selectedCategory);
+      }
     });
 
     try {
@@ -135,6 +155,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isSearching = _activeSearchQuery.isNotEmpty;
+
     return Scaffold(
       backgroundColor: const Color(0xFFF9FAFC),
 
@@ -164,8 +186,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
       body: SafeArea(
         child: Column(
           children: [
-
-            // Search Bar
+            // Search bar
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 16,
@@ -175,20 +196,34 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 controller: _searchController,
                 textInputAction: TextInputAction.search,
                 onSubmitted: _searchProducts,
+                onChanged: (value) {
+                  setState(() {});
+                },
                 decoration: InputDecoration(
                   hintText: 'Search products...',
                   prefixIcon: const Icon(Icons.search),
-                  suffixIcon: IconButton(
+
+                  suffixIcon: _searchController.text.isNotEmpty
+                      ? IconButton(
+                    onPressed: _clearSearch,
+                    icon: const Icon(Icons.close),
+                  )
+                      : IconButton(
                     onPressed: () {
-                      _searchProducts(_searchController.text);
+                      _searchProducts(
+                        _searchController.text,
+                      );
                     },
                     icon: const Icon(Icons.arrow_forward),
                   ),
+
                   filled: true,
                   fillColor: Colors.white,
+
                   contentPadding: const EdgeInsets.symmetric(
                     vertical: 15,
                   ),
+
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
                     borderSide: BorderSide.none,
@@ -216,10 +251,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
                   horizontal: 16,
                 ),
                 children: [
-                  _buildCategoryChip(
-                    'All',
-                    'all',
-                  ),
+                  _buildCategoryChip('All', 'all'),
 
                   ...categories.map((category) {
                     return _buildCategoryChip(
@@ -233,7 +265,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
             const SizedBox(height: 12),
 
-            // Products Heading
+            // Products heading
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 18,
@@ -242,21 +274,31 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 mainAxisAlignment:
                 MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Discover Products',
-                    style: TextStyle(
-                      fontSize: 19,
-                      fontWeight: FontWeight.bold,
+                  Expanded(
+                    child: Text(
+                      isSearching
+                          ? 'Search Results'
+                          : 'Discover Products',
+                      style: const TextStyle(
+                        fontSize: 19,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
 
-                  Text(
-                    selectedCategory == 'all'
-                        ? 'All Products'
-                        : selectedCategory.replaceAll('-', ' '),
-                    style: const TextStyle(
-                      color: Colors.grey,
-                      fontSize: 12,
+                  Flexible(
+                    child: Text(
+                      isSearching
+                          ? '"$_activeSearchQuery"'
+                          : selectedCategory == 'all'
+                          ? 'All Products'
+                          : selectedCategory.replaceAll('-', ' '),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 12,
+                      ),
                     ),
                   ),
                 ],
@@ -270,7 +312,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
               child: FutureBuilder<List<Product>>(
                 future: productsFuture,
                 builder: (context, snapshot) {
-
                   if (snapshot.connectionState ==
                       ConnectionState.waiting) {
                     return const Center(
@@ -315,12 +356,18 @@ class _ExploreScreenState extends State<ExploreScreen> {
                         return ProductCard(
                           product: product,
                           onAdd: () {
-                            context.read<CartProvider>().addToCart(product);
+                            context
+                                .read<CartProvider>()
+                                .addToCart(product);
 
-                            ScaffoldMessenger.of(context).showSnackBar(
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(
                               SnackBar(
-                                content: Text('${product.title} added to cart'),
-                                duration: const Duration(seconds: 1),
+                                content: Text(
+                                  '${product.title} added to cart',
+                                ),
+                                duration:
+                                const Duration(seconds: 1),
                               ),
                             );
                           },
@@ -337,12 +384,13 @@ class _ExploreScreenState extends State<ExploreScreen> {
     );
   }
 
-  // Category Chip Widget
+  // Category chip
   Widget _buildCategoryChip(
       String title,
       String slug,
       ) {
-    final isSelected = selectedCategory == slug;
+    final isSelected = selectedCategory == slug &&
+        _activeSearchQuery.isEmpty;
 
     return GestureDetector(
       onTap: () => _selectCategory(slug),
@@ -386,7 +434,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
     );
   }
 
-  // Error State
+  // Error state
   Widget _buildErrorState() {
     return Center(
       child: Column(
@@ -401,9 +449,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
           const Text('Unable to load products'),
           const SizedBox(height: 12),
           ElevatedButton(
-            onPressed: () {
-              _refreshProducts();
-            },
+            onPressed: _refreshProducts,
             child: const Text('Try Again'),
           ),
         ],
@@ -411,7 +457,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
     );
   }
 
-  // Empty State
+  // Empty state
   Widget _buildEmptyState() {
     return Center(
       child: Column(
@@ -419,21 +465,30 @@ class _ExploreScreenState extends State<ExploreScreen> {
         children: [
           const Icon(
             Icons.search_off,
-            size: 55,
+            size: 65,
             color: Colors.grey,
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
           const Text(
             'No products found',
             style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
             ),
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 7),
           const Text(
             'Try another search or category.',
-            style: TextStyle(color: Colors.grey),
+            style: TextStyle(
+              color: Colors.grey,
+              fontSize: 13,
+            ),
+          ),
+          const SizedBox(height: 18),
+          OutlinedButton.icon(
+            onPressed: _clearSearch,
+            icon: const Icon(Icons.refresh),
+            label: const Text('Clear Search'),
           ),
         ],
       ),
