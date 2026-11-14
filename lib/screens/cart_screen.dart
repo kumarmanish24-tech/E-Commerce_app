@@ -6,7 +6,7 @@ import '../ models/cart_item.dart';
 import '../providers/cart_provider.dart';
 
 
-const Color primaryGreen = Color(0xFF75F54A);
+const Color primaryGreen = Color(0xFFB9F59F);
 const Color darkText = Color(0xFF171A16);
 const Color lightBackground = Color(0xFFF7F8F6);
 

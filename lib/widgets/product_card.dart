@@ -1,8 +1,9 @@
 
 import 'package:flutter/material.dart';
 
-import '../ models/product.dart';
 
+import '../ models/product.dart';
+import '../screens/product_details_screen.dart';
 
 class ProductCard extends StatefulWidget {
   final Product product;
@@ -24,13 +25,22 @@ class _ProductCardState extends State<ProductCard> {
   static const green = Color(0xFFB9F59F);
   static const darkGreen = Color(0xFF176B35);
 
+  void _openProductDetails() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => ProductDetailsScreen(
+          product: widget.product,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final product = widget.product;
 
     return Container(
-
-
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
@@ -47,28 +57,30 @@ class _ProductCardState extends State<ProductCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
-          // Product Image
+          // Product Image - Tap to open details
           Expanded(
             flex: 6,
             child: Stack(
               children: [
                 Positioned.fill(
-                  child: Image.network(
-                    product.thumbnail,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) {
-                      return const Center(
-                        child: Icon(Icons.image_not_supported),
-                      );
-                    },
-                    loadingBuilder: (_, child, progress) {
-                      if (progress == null) return child;
+                  child: GestureDetector(
+                    onTap: _openProductDetails,
+                    child: Image.network(
+                      product.thumbnail,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) {
+                        return const Center(
+                          child: Icon(Icons.image_not_supported),
+                        );
+                      },
+                      loadingBuilder: (_, child, progress) {
+                        if (progress == null) return child;
 
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    },
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      },
+                    ),
                   ),
                 ),
 
@@ -122,9 +134,7 @@ class _ProductCardState extends State<ProductCard> {
                         isFavorite
                             ? Icons.favorite
                             : Icons.favorite_border,
-                        color: isFavorite
-                            ? Colors.red
-                            : Colors.black,
+                        color: isFavorite ? Colors.red : Colors.black,
                         size: 21,
                       ),
                     ),
@@ -134,106 +144,107 @@ class _ProductCardState extends State<ProductCard> {
             ),
           ),
 
-          // Product Details
+          // Product Details - Tap to open details
           Expanded(
             flex: 4,
-            child: Padding(
-              padding: const EdgeInsets.all(7),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-
-                  Text(
-                    product.title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-
-                  const SizedBox(height: 3),
-
-                  Text(
-                    product.category,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Colors.grey,
-                      fontSize: 12,
-                    ),
-                  ),
-
-                  const Spacer(),
-
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment:
-                          CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              '\$${product.discountedPrice.toStringAsFixed(2)}',
-                              maxLines: 1,
-                              style: const TextStyle(
-                                color: darkGreen,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              '\$${product.price.toStringAsFixed(2)}',
-                              style: const TextStyle(
-                                color: Colors.grey,
-                                fontSize: 11,
-                                decoration:
-                                TextDecoration.lineThrough,
-                              ),
-                            ),
-                          ],
-                        ),
+            child: GestureDetector(
+              onTap: _openProductDetails,
+              child: Padding(
+                padding: const EdgeInsets.all(7),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      product.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
                       ),
+                    ),
 
-                      Flexible(
-                        child: InkWell(
-                          onTap: widget.onAdd,
-                          borderRadius: BorderRadius.circular(30),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              color: green,
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            child: const Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.shopping_cart_outlined,
-                                  size: 16,
+                    const SizedBox(height: 3),
+
+                    Text(
+                      product.category,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 12,
+                      ),
+                    ),
+
+                    const Spacer(),
+
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                '\$${product.discountedPrice.toStringAsFixed(2)}',
+                                maxLines: 1,
+                                style: const TextStyle(
                                   color: darkGreen,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                SizedBox(width: 4),
-                                Text(
-                                  'Add',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
+                              ),
+                              Text(
+                                '\$${product.price.toStringAsFixed(2)}',
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 11,
+                                  decoration: TextDecoration.lineThrough,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // Add to Cart
+                        Flexible(
+                          child: InkWell(
+                            onTap: widget.onAdd,
+                            borderRadius: BorderRadius.circular(30),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color: green,
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              child: const Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.shopping_cart_outlined,
+                                    size: 16,
                                     color: darkGreen,
-                                    fontSize: 12,
                                   ),
-                                ),
-                              ],
+                                  SizedBox(width: 4),
+                                  Text(
+                                    'Add',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: darkGreen,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
