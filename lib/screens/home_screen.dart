@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import '../widgets/flash_sale_section.dart';
 import '../widgets/product_card.dart';
 import '../widgets/promo_banner_carousel.dart';
 import '../widgets/recommended_products.dart';
@@ -34,7 +35,7 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.only(top: 16,bottom: 16,left: 8,right: 8),
+        padding: const EdgeInsets.only(top: 16,bottom: 16,left: 2,right: 4),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -99,7 +100,14 @@ class HomeScreen extends StatelessWidget {
 
 
 
-            const SizedBox(height: 12),
+            const FlashSaleSection(),
+
+
+            const SizedBox(height: 24),
+
+
+
+
 
             const RecommendedProducts(),
 
@@ -110,51 +118,13 @@ class HomeScreen extends StatelessWidget {
 
 
 
-            const SizedBox(height: 24),
 
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(22),
-              decoration: BoxDecoration(
-                color: const Color(0xFF315C81),
-                borderRadius: BorderRadius.circular(18),
-              ),
-              child: const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'SPECIAL OFFER',
-                    style: TextStyle(color: Colors.white70),
-                  ),
-                  SizedBox(height: 10),
-                  Text(
-                    'Up to 40% OFF',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 27,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 6),
-                  Text(
-                    'Explore our latest collection.',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
+
+
 
             const SizedBox(height: 24),
 
-            const Text(
-              'Featured Products',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
 
-            const SizedBox(height: 14),
 
             // GridView.builder(
             //   shrinkWrap: true,
