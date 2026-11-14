@@ -9,6 +9,19 @@ import '../ models/product.dart';
 class ProductService {
   static const String baseUrl = 'https://dummyjson.com/products';
 
+
+// Recommended products
+  Future<List<Product>> fetchRecommendedProducts() async {
+    final response = await http.get(
+      Uri.parse(
+        '$baseUrl?sortBy=rating&order=desc&limit=8',
+      ),
+    );
+
+    return _handleProductResponse(response);
+  }
+
+
   // Fetch all products
   Future<List<Product>> fetchProducts() async {
     final response = await http.get(

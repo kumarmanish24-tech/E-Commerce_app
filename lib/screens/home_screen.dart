@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import '../widgets/product_card.dart';
 import '../widgets/promo_banner_carousel.dart';
+import '../widgets/recommended_products.dart';
+import '../widgets/trending_now_section.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -78,6 +80,15 @@ class HomeScreen extends StatelessWidget {
                 // Other home screen sections
               ],
             ),
+
+            const SizedBox(height: 25),
+
+            const RecommendedProducts(),
+
+            const SizedBox(height: 25),
+
+            const TrendingNowSection(),
+            const SizedBox(height: 24),
 
 
 
